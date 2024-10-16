@@ -1,0 +1,41 @@
+[
+  {
+    "timestamp": "2024-10-16T22:28:46.247Z",
+    "inputs": [
+      {
+        "label": "URL local",
+        "data": "789"
+      },
+      {
+        "label": "URL redirect",
+        "data": "https://www.google.com"
+      }
+    ]
+  },
+  {
+    "timestamp": "2024-10-16T22:32:20.493Z",
+    "inputs": [
+      {
+        "label": "URL local",
+        "data": "1111"
+      },
+      {
+        "label": "URL redirect",
+        "data": "https://www.builtwithlovellc.com"
+      }
+    ]
+  },
+  {
+    "timestamp": "2024-10-16T22:55:05.608Z",
+    "inputs": [
+      {
+        "label": "URL local",
+        "data": "aslkdiledoilke"
+      },
+      {
+        "label": "URL redirect",
+        "data": "https://jobtread.com"
+      }
+    ]
+  }
+]
