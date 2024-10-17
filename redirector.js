@@ -183,6 +183,8 @@ app.get('/invoice/:localUrl', async (req, res) => {
   }
 });
 
+// Serve static files from the React app build directory
+app.use(express.static(path.join(__dirname, 'build')));
 // Start the server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

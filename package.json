@@ -22,7 +22,7 @@
   },
   "scripts": {
     "start": "concurrently \"npm run server\" \"npm run client\"",
-    "server": "nodemon src/redirector.js",
+    "server": "node redirector.js",
     "client": "PORT=3002 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
