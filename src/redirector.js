@@ -9,6 +9,27 @@ const PORT = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json());
 
+// Simulated database of valid credentials
+const validCredentials = [
+  { username: 'admin', secret: 'secretkey123' },
+  { username: 'user1', secret: 'userkey456' }
+];
+
+// Simple authentication middleware
+const authenticate = (req, res, next) => {
+  const { username, secret } = req.body;
+
+  const isValid = validCredentials.some(
+    cred => cred.username === username && cred.secret === secret
+  );
+
+  if (!isValid) {
+    return res.status(401).json({ error: 'Invalid credentials' });
+  }
+
+  next();
+};
+
 // Health check endpoint
 app.get('/health', (req, res) => {
   res.status(200).send('OK');
@@ -58,8 +79,8 @@ app.post('/api/save-data', async (req, res) => {
   }
 });
 
-// New API endpoint to save data externally
-app.post('/api/external-save', async (req, res) => {
+// New API endpoint to save data externally with simple authentication
+app.post('/api/external-save', authenticate, async (req, res) => {
   try {
     const { urlLocal, urlRedirect } = req.body;
     
@@ -75,6 +96,12 @@ app.post('/api/external-save', async (req, res) => {
       existingData = JSON.parse(fileContent);
     } catch (error) {
       // If file doesn't exist or is empty, we'll start with an empty array
+    }
+
+    // Check if urlLocal already exists
+    const urlExists = existingData.some(entry => entry.inputs[0].data === urlLocal);
+    if (urlExists) {
+      return res.status(400).json({ error: 'URL local already exists' });
     }
 
     const newEntry = {

@@ -37,5 +37,31 @@
         "data": "https://jobtread.com"
       }
     ]
+  },
+  {
+    "timestamp": "2024-10-17T01:50:23.559Z",
+    "inputs": [
+      {
+        "label": "URL local",
+        "data": "example"
+      },
+      {
+        "label": "URL redirect",
+        "data": "https://example.com"
+      }
+    ]
+  },
+  {
+    "timestamp": "2024-10-17T01:52:40.816Z",
+    "inputs": [
+      {
+        "label": "URL local",
+        "data": "example2"
+      },
+      {
+        "label": "URL redirect",
+        "data": "https://example.com"
+      }
+    ]
   }
 ]
