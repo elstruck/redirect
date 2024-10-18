@@ -71,8 +71,8 @@ function Output({ triggerRefetch }) {
               <tr key={index}>
                 <td>{new Date(entry.timestamp).toLocaleString()}</td>
                 <td>
-                  <a href={`/invoice/${entry.inputs[0].data}`} target="_blank" rel="noopener noreferrer">
-                    {`/invoice/${entry.inputs[0].data}`}
+                  <a href={`${entry.inputs[1].data}`} target="_blank" rel="noopener noreferrer">
+                    {`/${entry.inputs[0].data}`}
                   </a>
                 </td>
                 <td>{entry.inputs[1].data}</td>

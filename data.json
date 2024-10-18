@@ -26,28 +26,15 @@
     ]
   },
   {
-    "timestamp": "2024-10-16T22:55:05.608Z",
+    "timestamp": "2024-10-18T18:18:31.280Z",
     "inputs": [
       {
         "label": "URL local",
-        "data": "aslkdiledoilke"
+        "data": "testing"
       },
       {
         "label": "URL redirect",
-        "data": "https://jobtread.com"
-      }
-    ]
-  },
-  {
-    "timestamp": "2024-10-17T01:50:23.559Z",
-    "inputs": [
-      {
-        "label": "URL local",
-        "data": "example"
-      },
-      {
-        "label": "URL redirect",
-        "data": "https://example.com"
+        "data": "https://google.com"
       }
     ]
   }

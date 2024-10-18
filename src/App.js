@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import Output from './Output';
 import './App.css';
+
 function App() {
   const [inputData, setInputData] = useState({
     input1: { label: 'URL local', data: '' },

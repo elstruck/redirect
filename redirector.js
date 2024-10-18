@@ -153,7 +153,7 @@ app.delete('/api/delete-data/:timestamp', async (req, res) => {
 });
 
 // New route for URL redirection
-app.get('/invoice/:localUrl', async (req, res) => {
+app.get('/:localUrl', async (req, res) => {
   try {
     const { localUrl } = req.params;
     console.log(`Received redirection request for: ${localUrl}`);
