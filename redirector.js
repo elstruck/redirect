@@ -65,10 +65,22 @@ app.post('/api/save-data', async (req, res) => {
       // If file doesn't exist or is empty, we'll start with an empty array
     }
 
-    existingData.push({
-      timestamp: new Date().toISOString(),
-      inputs: data
-    });
+    const localUrl = data[0].data;
+    const existingIndex = existingData.findIndex(entry => entry.inputs[0].data === localUrl);
+
+    if (existingIndex !== -1) {
+      // Update existing entry
+      existingData[existingIndex] = {
+        timestamp: new Date().toISOString(),
+        inputs: data
+      };
+    } else {
+      // Add new entry
+      existingData.push({
+        timestamp: new Date().toISOString(),
+        inputs: data
+      });
+    }
 
     await fs.writeFile(filePath, JSON.stringify(existingData, null, 2));
 
@@ -120,6 +132,35 @@ app.post('/api/external-save', authenticate, async (req, res) => {
   } catch (error) {
     console.error('Error saving external data:', error);
     res.status(500).json({ error: 'Error saving data' });
+  }
+});
+
+// New API endpoint to delete data
+app.delete('/api/delete-data/:timestamp', async (req, res) => {
+  try {
+    const { timestamp } = req.params;
+    const filePath = path.join(__dirname, 'data.json');
+
+    let existingData = [];
+    try {
+      const fileContent = await fs.readFile(filePath, 'utf-8');
+      existingData = JSON.parse(fileContent);
+    } catch (error) {
+      return res.status(404).json({ error: 'Data file not found' });
+    }
+
+    const updatedData = existingData.filter(entry => entry.timestamp !== timestamp);
+
+    if (updatedData.length === existingData.length) {
+      return res.status(404).json({ error: 'Entry not found' });
+    }
+
+    await fs.writeFile(filePath, JSON.stringify(updatedData, null, 2));
+
+    res.status(200).json({ message: 'Data deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting data:', error);
+    res.status(500).json({ error: 'Error deleting data' });
   }
 });
 

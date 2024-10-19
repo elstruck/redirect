@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Delete from './Delete';
+import Update from './Update';
 
 function Output({ triggerRefetch }) {
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [editingId, setEditingId] = useState(null);
 
   useEffect(() => {
     fetchData();
@@ -43,6 +45,29 @@ function Output({ triggerRefetch }) {
     setData(prevData => prevData.filter(entry => entry.timestamp !== deletedTimestamp));
   };
 
+  const handleEditClick = (timestamp) => {
+    setEditingId(prevEditingId => prevEditingId === timestamp ? null : timestamp);
+  };
+
+  const handleInputChange = (timestamp, index, value) => {
+    setData(prevData => {
+      const updatedData = [...prevData];
+      const entry = updatedData.find(entry => entry.timestamp === timestamp);
+      if (entry) {
+        entry.inputs[index].data = value;
+      }
+      return updatedData;
+    });
+  };
+
+  const handleUpdate = async (timestamp) => {
+    try {
+      await fetchData(); // Refresh data after update
+    } catch (error) {
+      console.error('Error updating data:', error);
+    }
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -63,19 +88,50 @@ function Output({ triggerRefetch }) {
               <th>Time</th>
               <th>URL local</th>
               <th>URL redirect</th>
-              <th>Action</th>
+              <th>Update</th>
+              <th>Delete</th>
             </tr>
           </thead>
           <tbody>
-            {data.map((entry, index) => (
-              <tr key={index}>
+            {data.map((entry) => (
+              <tr key={entry.timestamp}>
                 <td>{new Date(entry.timestamp).toLocaleString()}</td>
                 <td>
                   <a href={`${entry.inputs[1].data}`} target="_blank" rel="noopener noreferrer">
                     {`/${entry.inputs[0].data}`}
                   </a>
                 </td>
-                <td>{entry.inputs[1].data}</td>
+                <td>
+                  {editingId === entry.timestamp ? (
+                    <div className="urlredirect-one">
+                      <input
+                        type="text"
+                        value={entry.inputs[1].data}
+                        onChange={(e) => handleInputChange(entry.timestamp, 1, e.target.value)}
+                      />
+                    </div>
+                  ) : (
+                    <div className="urlredirect-one">
+                      {entry.inputs[1].data}
+                    </div>
+                  )}
+                  <div className="urlredirect-two">
+                    <button 
+                      className={`edit edit-button ${editingId === entry.timestamp ? 'active' : ''}`}
+                      onClick={() => handleEditClick(entry.timestamp)}
+                    >
+                      <i className="fas fa-pencil-alt"></i>
+                    </button>
+                  </div>
+                </td>
+                <td>
+                  <Update
+                    timestamp={entry.timestamp}
+                    localUrl={entry.inputs[0].data}
+                    redirectUrl={entry.inputs[1].data}
+                    onUpdate={handleUpdate}
+                  />
+                </td>
                 <td>
                   <Delete timestamp={entry.timestamp} onDelete={handleDelete} />
                 </td>
