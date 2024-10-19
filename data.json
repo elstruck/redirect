@@ -13,7 +13,7 @@
     ]
   },
   {
-    "timestamp": "2024-10-19T21:41:42.014Z",
+    "timestamp": "2024-10-19T22:23:12.362Z",
     "inputs": [
       {
         "label": "URL local",
@@ -21,7 +21,20 @@
       },
       {
         "label": "URL redirect",
-        "data": "https://builtwithlovellc.com/789789"
+        "data": "https://builtwithlovellc.com/"
+      }
+    ]
+  },
+  {
+    "timestamp": "2024-10-19T22:23:31.516Z",
+    "inputs": [
+      {
+        "label": "URL local",
+        "data": "/invoice/543"
+      },
+      {
+        "label": "URL redirect",
+        "data": "https://google.com"
       }
     ]
   }

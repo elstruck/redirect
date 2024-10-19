@@ -226,6 +226,17 @@ app.get('/:localUrl', async (req, res) => {
 
 // Serve static files from the React app build directory
 app.use(express.static(path.join(__dirname, 'build')));
+
+// Serve the React app for the /k route
+app.get('/k', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
+
+// Catch-all route to serve the React app for any unmatched routes
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
+
 // Start the server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
