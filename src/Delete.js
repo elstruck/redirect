@@ -12,7 +12,7 @@ function Delete({ timestamp, onDelete }) {
   };
 
   return (
-    <button onClick={handleDelete}>Delete</button>
+    <button className="danger" onClick={handleDelete}>Delete</button>
   );
 }
 

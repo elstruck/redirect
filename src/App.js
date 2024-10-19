@@ -1,56 +1,61 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-import Output from './Output';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import Home from './Home';
 import './App.css';
 
 function App() {
-  const [inputData, setInputData] = useState({
-    input1: { label: 'URL local', data: '' },
-    input2: { label: 'URL redirect', data: '' }
-  });
-  const [triggerRefetch, setTriggerRefetch] = useState(0);
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Redirect />} />
+        <Route path="/k" element={<ProtectedRoute />} />
+      </Routes>
+    </Router>
+  );
+}
 
-  const handleInputChange = (e, inputKey) => {
-    setInputData(prevState => ({
-      ...prevState,
-      [inputKey]: { ...prevState[inputKey], data: e.target.value }
-    }));
-  };
+// Redirect component
+function Redirect() {
+  React.useEffect(() => {
+    window.location.href = 'https://kepsakekreations.com';
+  }, []);
 
-  const handleSubmit = async (e) => {
+  return null;
+}
+
+// ProtectedRoute component
+function ProtectedRoute() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [password, setPassword] = useState('');
+  const correctPassword = 'KEPsake!01'; // Replace with your desired password
+
+  const handleSubmit = (e) => {
     e.preventDefault();
-    try {
-      await axios.post('/api/save-data', { data: Object.values(inputData) });
-      setInputData({
-        input1: { label: 'URL local', data: '' },
-        input2: { label: 'URL redirect', data: '' }
-      });
-      setTriggerRefetch(prev => prev + 1); // Increment to trigger refetch
-    } catch (error) {
-      console.error('Error saving data:', error);
-      // Optionally, you can set an error state here if you want to display an error message in the UI
+    if (password === correctPassword) {
+      setIsAuthenticated(true);
+    } else {
+      alert('Incorrect password');
     }
   };
 
+  if (isAuthenticated) {
+    return <Home />;
+  }
+
   return (
     <div className="App">
-      <h1>Save Redirects</h1>
-      <form onSubmit={handleSubmit}>
-        {Object.entries(inputData).map(([key, { label, data }]) => (
-          <div key={key}>
-            <label htmlFor={key}>{label}:</label>
-            <input
-              id={key}
-              type="text"
-              value={data}
-              onChange={(e) => handleInputChange(e, key)}
-              placeholder={`Enter ${label.toLowerCase()}`}
-            />
-          </div>
-        ))}
-        <button type="submit">Save</button>
-      </form>
-      <Output triggerRefetch={triggerRefetch} />
+      <div>
+        <h2>Enter Password</h2>
+        <form onSubmit={handleSubmit}>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Enter password"
+        />
+        <button className="edit" type="submit">Submit</button>
+        </form>
+      </div>
     </div>
   );
 }
