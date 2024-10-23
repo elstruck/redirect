@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Home from './Home';
+import WhoopsPage from './WhoopsPage';
 import './App.css';
 
 function App() {
