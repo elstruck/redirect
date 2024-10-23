@@ -9,6 +9,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Redirect />} />
         <Route path="/k" element={<ProtectedRoute />} />
+        <Route path="/:localUrl" element={<WhoopsPage />} />
       </Routes>
     </Router>
   );

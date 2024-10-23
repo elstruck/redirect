@@ -219,19 +219,19 @@ app.get('/:localUrl', async (req, res) => {
       return res.redirect(matchingEntry.inputs[1].data);
     } else {
       console.log(`No match found for: ${localUrl}`);
-      // If no match is found, send a 404 response
-      return res.status(404).send('No matching URL found');
+      // If no match is found, send a JSON response with an error message and the localUrl
+      return res.status(404).json({ error: 'No matching URL found', localUrl });
     }
   } catch (error) {
     console.error('Error processing redirection:', error);
-    return res.status(500).send(`Error processing redirection: ${error.message}`);
+    return res.status(500).json({ error: `Error processing redirection: ${error.message}`, localUrl: req.params.localUrl });
   }
 });
 
 // Serve static files from the React app build directory
 app.use(express.static(path.join(__dirname, 'build')));
 
-// Catch-all route to serve the React app for any unmatched routes
+// Catch-all route to serve the React app
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
