@@ -13,24 +13,37 @@
     ]
   },
   {
-    "timestamp": "2024-10-19T22:23:12.362Z",
+    "timestamp": "2024-10-23T19:54:14.716Z",
     "inputs": [
       {
         "label": "URL local",
-        "data": "invoice/123"
+        "data": "georgie"
       },
       {
         "label": "URL redirect",
-        "data": "https://builtwithlovellc.com/"
+        "data": ""
       }
     ]
   },
   {
-    "timestamp": "2024-10-19T22:23:31.516Z",
+    "timestamp": "2024-10-23T20:19:40.932Z",
     "inputs": [
       {
         "label": "URL local",
-        "data": "/invoice/543"
+        "data": "elliott"
+      },
+      {
+        "label": "URL redirect",
+        "data": "https://elliottwittstruck.com"
+      }
+    ]
+  },
+  {
+    "timestamp": "2024-10-23T20:29:25.678Z",
+    "inputs": [
+      {
+        "label": "URL local",
+        "data": "invoice/345"
       },
       {
         "label": "URL redirect",

@@ -197,7 +197,7 @@ app.delete('/api/delete-data/:timestamp', async (req, res) => {
   }
 });
 
-// New route for URL redirection
+// Update the redirection route
 app.get('/:localUrl', async (req, res) => {
   try {
     const { localUrl } = req.params;
@@ -215,11 +215,10 @@ app.get('/:localUrl', async (req, res) => {
 
     if (matchingEntry) {
       console.log(`Match found. Redirecting to: ${matchingEntry.inputs[1].data}`);
-      // Redirect to the corresponding URL
-      return res.redirect(matchingEntry.inputs[1].data);
+      // Instead of redirecting, send the redirect URL to the client
+      return res.json({ redirectUrl: matchingEntry.inputs[1].data });
     } else {
       console.log(`No match found for: ${localUrl}`);
-      // If no match is found, send a JSON response with an error message and the localUrl
       return res.status(404).json({ error: 'No matching URL found', localUrl });
     }
   } catch (error) {
