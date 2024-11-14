@@ -197,10 +197,10 @@ app.delete('/api/delete-data/:timestamp', async (req, res) => {
   }
 });
 
-// Update the redirection route
-app.get('/:localUrl', async (req, res) => {
+// Update the redirection route to capture nested paths
+app.get('/*', async (req, res) => {
   try {
-    const { localUrl } = req.params;
+    const localUrl = req.params[0];  // Capture the entire nested path
     console.log(`Received redirection request for: ${localUrl}`);
 
     const filePath = path.join(__dirname, 'data.json');
@@ -215,17 +215,18 @@ app.get('/:localUrl', async (req, res) => {
 
     if (matchingEntry) {
       console.log(`Match found. Redirecting to: ${matchingEntry.inputs[1].data}`);
-      // Instead of redirecting, send the redirect URL to the client
-      return res.redirect(302, matchingEntry.inputs[1].data); // Perform server-side redirect
+      // Perform server-side redirect
+      return res.redirect(302, matchingEntry.inputs[1].data);
     } else {
       console.log(`No match found for: ${localUrl}`);
       return res.status(404).json({ error: 'No matching URL found', localUrl });
     }
   } catch (error) {
     console.error('Error processing redirection:', error);
-    return res.status(500).json({ error: `Error processing redirection: ${error.message}`, localUrl: req.params.localUrl });
+    return res.status(500).json({ error: `Error processing redirection: ${error.message}`, localUrl });
   }
 });
+
 
 // Serve static files from the React app build directory
 app.use(express.static(path.join(__dirname, 'build')));
