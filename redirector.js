@@ -216,7 +216,7 @@ app.get('/:localUrl', async (req, res) => {
     if (matchingEntry) {
       console.log(`Match found. Redirecting to: ${matchingEntry.inputs[1].data}`);
       // Instead of redirecting, send the redirect URL to the client
-      return res.json({ redirectUrl: matchingEntry.inputs[1].data });
+      return res.redirect(302, matchingEntry.inputs[1].data); // Perform server-side redirect
     } else {
       console.log(`No match found for: ${localUrl}`);
       return res.status(404).json({ error: 'No matching URL found', localUrl });
