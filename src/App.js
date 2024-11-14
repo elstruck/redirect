@@ -93,6 +93,7 @@ function RedirectPage() {
       });
   }, [localUrl]);
   
+  
 
   if (error) {
     return <WhoopsPage error={error} />;  // Display error page if there's an issue
