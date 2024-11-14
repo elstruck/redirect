@@ -70,19 +70,16 @@ function RedirectPage() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch(`/${encodeURIComponent(localUrl)}`)
-      .then(response => {
-        console.log('Response:', response);
-        return response.json();
-      })
+    // Fetch the redirect URL for the nested localUrl
+    fetch(`/${encodeURIComponent(localUrl)}`)  // Make sure to encode the URL
+      .then(response => response.json())
       .then(data => {
-        console.log('Data:', data);
         if (data.redirectUrl) {
           setRedirectUrl(data.redirectUrl);
+          // Set a delay to give the user time to see the page before redirection
           setTimeout(() => {
-            console.log('Redirecting to:', data.redirectUrl);
             window.location.href = data.redirectUrl;
-          }, 3000);
+          }, 3000);  // 5-second delay before redirect
         } else {
           setError(data.error || 'No redirect URL found');
         }
@@ -92,8 +89,6 @@ function RedirectPage() {
         setError('An error occurred while fetching the redirect URL');
       });
   }, [localUrl]);
-  
-  
 
   if (error) {
     return <WhoopsPage error={error} />;  // Display error page if there's an issue
