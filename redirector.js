@@ -4,7 +4,7 @@ const path = require('path');
 const cors = require('cors');
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = 3001;
 
 app.use(cors());
 app.use(express.json());
@@ -168,62 +168,46 @@ app.delete('/api/delete-data/:timestamp', async (req, res) => {
   }
 });
 
-// New API endpoint to delete data
-app.delete('/api/delete-data/:timestamp', async (req, res) => {
-  try {
-    const { timestamp } = req.params;
-    const filePath = path.join(__dirname, 'data.json');
-
-    let existingData = [];
-    try {
-      const fileContent = await fs.readFile(filePath, 'utf-8');
-      existingData = JSON.parse(fileContent);
-    } catch (error) {
-      return res.status(404).json({ error: 'Data file not found' });
-    }
-
-    const updatedData = existingData.filter(entry => entry.timestamp !== timestamp);
-
-    if (updatedData.length === existingData.length) {
-      return res.status(404).json({ error: 'Entry not found' });
-    }
-
-    await fs.writeFile(filePath, JSON.stringify(updatedData, null, 2));
-
-    res.status(200).json({ message: 'Data deleted successfully' });
-  } catch (error) {
-    console.error('Error deleting data:', error);
-    res.status(500).json({ error: 'Error deleting data' });
-  }
-});
-
 // Update the redirection route
 app.get('/:localUrl', async (req, res) => {
   try {
     const { localUrl } = req.params;
-    console.log(`Received redirection request for: ${localUrl}`);
+    console.log('\n=== Redirect Request ===');
+    console.log('1. Requested localUrl:', localUrl, '(Type:', typeof localUrl, ')');
+    
+    // Trim any leading/trailing slashes to normalize the URL
+    const normalizedLocalUrl = localUrl.replace(/^\/+|\/+$/g, '');
+    console.log('1a. Normalized localUrl:', normalizedLocalUrl);
 
     const filePath = path.join(__dirname, 'data.json');
-    console.log(`Attempting to read data from: ${filePath}`);
+    console.log('2. Reading from:', filePath);
 
     const fileContent = await fs.readFile(filePath, 'utf-8');
-    const data = JSON.parse(fileContent);
-    console.log(`Successfully read data. Found ${data.length} entries.`);
+    console.log('3. File content loaded successfully');
 
-    // Find the matching entry
-    const matchingEntry = data.find(entry => entry.inputs[0].data === localUrl);
+    const data = JSON.parse(fileContent);
+    console.log('4. Available URLs in data.json:', data.map(entry => ({
+      local: entry.inputs[0].data,
+      destination: entry.inputs[1].data
+    })));
+
+    const matchingEntry = data.find(entry => entry.inputs[0].data === normalizedLocalUrl);
+    console.log('5. Matching entry found:', matchingEntry || 'NO MATCH');
 
     if (matchingEntry) {
-      console.log(`Match found. Redirecting to: ${matchingEntry.inputs[1].data}`);
-      // Instead of redirecting, send the redirect URL to the client
-      return res.json({ redirectUrl: matchingEntry.inputs[1].data });
+      const destinationUrl = matchingEntry.inputs[1].data;
+      console.log('6. SUCCESS - Redirecting to:', destinationUrl);
+      return res.json({ redirectUrl: destinationUrl });
     } else {
-      console.log(`No match found for: ${localUrl}`);
-      return res.status(404).json({ error: 'No matching URL found', localUrl });
+      console.log('6. FAILED - No matching URL found');
+      return res.status(404).json({ 
+        error: `No matching URL found for: ${normalizedLocalUrl}`,
+        availableUrls: data.map(entry => entry.inputs[0].data) // This helps debug
+      });
     }
   } catch (error) {
-    console.error('Error processing redirection:', error);
-    return res.status(500).json({ error: `Error processing redirection: ${error.message}`, localUrl: req.params.localUrl });
+    console.error('SERVER ERROR:', error);
+    return res.status(500).json({ error: error.message });
   }
 });
 
@@ -237,5 +221,5 @@ app.get('*', (req, res) => {
 
 // Start the server
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });

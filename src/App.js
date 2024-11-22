@@ -63,46 +63,50 @@ function ProtectedRoute() {
   );
 }
 
-// RedirectPage component
 function RedirectPage() {
-  const { "*": localUrl } = useParams();  // Capture the entire nested URL (including slashes)
-  const [redirectUrl, setRedirectUrl] = useState(null);
+  const { '*': localUrl } = useParams(); // Capture nested URL
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Fetch the redirect URL for the nested localUrl
-    fetch(`/${encodeURIComponent(localUrl)}`)  // Make sure to encode the URL
-      .then(response => response.json())
-      .then(data => {
+    if (!localUrl) {
+      setError('No URL provided');
+      return;
+    }
+
+    console.log('Attempting to fetch for URL:', localUrl);
+
+    fetch(`http://localhost:3001/${encodeURIComponent(localUrl)}`)
+      .then(async response => {
+        const data = await response.json();
+        console.log('Server response:', data);
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Failed to get redirect URL');
+        }
+
         if (data.redirectUrl) {
-          setRedirectUrl(data.redirectUrl);
-          // Set a delay to give the user time to see the page before redirection
-          setTimeout(() => {
-            window.location.href = data.redirectUrl;
-          }, 3000);  // 5-second delay before redirect
+          window.location.replace(data.redirectUrl);
         } else {
-          setError(data.error || 'No redirect URL found');
+          throw new Error('No redirect URL provided');
         }
       })
       .catch(err => {
-        console.error('Error fetching redirect URL:', err);
-        setError('An error occurred while fetching the redirect URL');
+        console.error('Error:', err);
+        setError(err.message);
       });
   }, [localUrl]);
 
   if (error) {
-    return <WhoopsPage error={error} />;  // Display error page if there's an issue
+    console.log('Rendering WhoopsPage with error:', error);
+    return <WhoopsPage error={error} />;
   }
 
   return (
     <div className="App">
-      <h1>KEPsake Kreations</h1>  
-      <p>
-        You will be redirected shortly. If you are not redirected automatically,{' '}
-        <a href={redirectUrl}>click here</a>.
-      </p>
+      <h1>Redirecting...</h1>
     </div>
   );
 }
+
 
 export default App;

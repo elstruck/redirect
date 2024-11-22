@@ -1,0 +1,67 @@
+[
+  {
+    "timestamp": "2024-10-23T20:19:40.932Z",
+    "inputs": [
+      {
+        "label": "URL local",
+        "data": "elliott"
+      },
+      {
+        "label": "URL redirect",
+        "data": "https://elliottwittstruck.com"
+      }
+    ]
+  },
+  {
+    "timestamp": "2024-10-23T20:29:25.678Z",
+    "inputs": [
+      {
+        "label": "URL local",
+        "data": "invoice/345"
+      },
+      {
+        "label": "URL redirect",
+        "data": "https://google.com"
+      }
+    ]
+  },
+  {
+    "timestamp": "2024-11-14T18:19:19.334Z",
+    "inputs": [
+      {
+        "label": "URL local",
+        "data": "500"
+      },
+      {
+        "label": "URL redirect",
+        "data": "https://www.kepsakekreations.com/500promo"
+      }
+    ]
+  },
+  {
+    "timestamp": "2024-11-22T06:33:50.417Z",
+    "inputs": [
+      {
+        "label": "URL local",
+        "data": "invoice/22NwxrXgJsfx"
+      },
+      {
+        "label": "URL redirect",
+        "data": "https://app.squareup.com/pay-invoice/inv:0-ChA59j57rlv50we6mJ_Hs5JiENMP"
+      }
+    ]
+  },
+  {
+    "timestamp": "2024-11-22T06:34:45.564Z",
+    "inputs": [
+      {
+        "label": "URL local",
+        "data": "invoice/22NxbSxYev9J"
+      },
+      {
+        "label": "URL redirect",
+        "data": "https://app.squareup.com/pay-invoice/inv:0-ChASHGXZfNKafxFJO_xsMqP_ENMP"
+      }
+    ]
+  }
+]
