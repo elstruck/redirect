@@ -73,12 +73,12 @@ function RedirectPage() {
       return;
     }
 
-    console.log('Attempting to fetch for URL:', localUrl);
+    //console.log('Attempting to fetch for URL:', localUrl);
 
     fetch(`http://localhost:3001/${encodeURIComponent(localUrl)}`)
       .then(async response => {
         const data = await response.json();
-        console.log('Server response:', data);
+        //console.log('Server response:', data);
 
         if (!response.ok) {
           throw new Error(data.error || 'Failed to get redirect URL');
