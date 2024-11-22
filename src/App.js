@@ -8,22 +8,11 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Redirect />} />
         <Route path="/k" element={<ProtectedRoute />} />
-        {/* Route that captures any nested URL */}
-        <Route path="/*" element={<RedirectPage />} />
+        <Route path="/:localUrl" element={<RedirectPage />} />
       </Routes>
     </Router>
   );
-}
-
-// Redirect component
-function Redirect() {
-  React.useEffect(() => {
-    window.location.href = 'https://kepsakekreations.com';
-  }, []);
-
-  return null;
 }
 
 // ProtectedRoute component (unchanged)

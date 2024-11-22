@@ -30,10 +30,20 @@ const authenticate = (req, res, next) => {
   next();
 };
 
-// Serve the React app for the /k route
+
+// Add this route BEFORE your /:localUrl(*) route
+app.get('/', (req, res) => {
+  res.redirect('https://kepsakekreations.com');
+});
+// Serve static files from the React app build directory BEFORE routes 
+app.use(express.static(path.join(__dirname, 'build')));
+app.use(express.static(path.join(__dirname, 'public')));
+
 app.get('/k', (req, res) => {
+  // Serve your React app for the /k route
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
+
 // Health check endpoint
 app.get('/health', (req, res) => {
   res.status(200).send('OK');
@@ -208,10 +218,6 @@ app.get('/:localUrl(*)', async (req, res) => {
     return res.status(500).json({ error: error.message });
   }
 });
-
-
-// Serve static files from the React app build directory
-app.use(express.static(path.join(__dirname, 'build')));
 
 // Catch-all route to serve the React app
 app.get('*', (req, res) => {
