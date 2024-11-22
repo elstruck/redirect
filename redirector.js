@@ -168,14 +168,12 @@ app.delete('/api/delete-data/:timestamp', async (req, res) => {
   }
 });
 
-// Update the redirection route
-app.get('/:localUrl', async (req, res) => {
+app.get('/:localUrl(*)', async (req, res) => {
   try {
     const { localUrl } = req.params;
     //console.log('\n=== Redirect Request ===');
     //console.log('1. Requested localUrl:', localUrl, '(Type:', typeof localUrl, ')');
     
-    // Trim any leading/trailing slashes to normalize the URL
     const normalizedLocalUrl = localUrl.replace(/^\/+|\/+$/g, '');
     //console.log('1a. Normalized localUrl:', normalizedLocalUrl);
 
@@ -183,26 +181,26 @@ app.get('/:localUrl', async (req, res) => {
     //console.log('2. Reading from:', filePath);
 
     const fileContent = await fs.readFile(filePath, 'utf-8');
-    //console.log('3. File content loaded successfully');
-
     const data = JSON.parse(fileContent);
-    //console.log('4. Available URLs in data.json:', data.map(entry => ({
-    //  local: entry.inputs[0].data,
-    //  destination: entry.inputs[1].data
-    //})));
+    
+    //console.log('4a. Looking for exact match:', normalizedLocalUrl);
+    const matchingEntry = data.find(entry => {
+      //console.log('4b. Comparing with:', entry.inputs[0].data, 
+      //            'Match?:', entry.inputs[0].data === normalizedLocalUrl);
+      return entry.inputs[0].data === normalizedLocalUrl;
+    });
 
-    const matchingEntry = data.find(entry => entry.inputs[0].data === normalizedLocalUrl);
     //console.log('5. Matching entry found:', matchingEntry || 'NO MATCH');
 
     if (matchingEntry) {
       const destinationUrl = matchingEntry.inputs[1].data;
       //console.log('6. SUCCESS - Redirecting to:', destinationUrl);
-      return res.json({ redirectUrl: destinationUrl });
+      return res.redirect(302, destinationUrl); // Use HTTP 302 redirect
     } else {
-      //console.log('6. FAILED - No matching URL found');
+      console.log('6. FAILED - No matching URL found');
       return res.status(404).json({ 
         error: `No matching URL found for: ${normalizedLocalUrl}`,
-        availableUrls: data.map(entry => entry.inputs[0].data) // This helps debug
+        availableUrls: data.map(entry => entry.inputs[0].data)
       });
     }
   } catch (error) {
@@ -210,6 +208,7 @@ app.get('/:localUrl', async (req, res) => {
     return res.status(500).json({ error: error.message });
   }
 });
+
 
 // Serve static files from the React app build directory
 app.use(express.static(path.join(__dirname, 'build')));
